@@ -7,10 +7,9 @@ class:
 size: 16:9
 footer: "[practica 6.2 docker con laravel](https://www.hashbangcode.com)"
 marp: true
+--- 
+# Practica 6.2 Cesar
 ---
-# Practica 6.2
----
-![bg left](./img/badground.png)
 
 ## Índice
 1. [estructura de directorios](#estructura-de-directorios)
@@ -21,13 +20,20 @@ marp: true
 ---
 
 ## Indice
-![bg left](./img/badground.png)
 
 5. [Pagina de prueba php](#pagina-de-prueba-php)
 6. [Construir y ejecutar contenedores]( #construir-y-ejecutar-los-contenedores)
+7. [Verficar base de datos](#7-verificar-la-base-de-datos)
+8. [Instalacion Composer](#8-instalacion-composer)
+
+9. [Creacion proyecto laravel](#9-creacion-proyecto-laravel)
+10. [Configurar phpMyAdmin](#10-configurar-phpmyadmin)
 ---
+
+
 ## Estructura de directorios
-![bg left](./img/badground.png)
+<!-- ![bg left](./img/badground.png) -->
+creamos las carpetas y ficheros
 
 ```bash
 mkdir -p practica6-2/nginx
@@ -44,14 +50,14 @@ touch practica6-2/mariadb/init.sql
 touch practica6-2/www/html/index.php
  ``` 
 ---
-![bg left](./img/badground.png)
+<!-- ![bg left](./img/badground.png) -->
 
 ## Configuracion nginx
 
 ```bash
 vim default.conf
 ```
-
+---
 ```nginx
    server {
  listen 80 default_server;
@@ -70,7 +76,7 @@ vim default.conf
 } 
 ```
 ---
-![bg left](./img/badground.png)
+<!-- ![bg left](./img/badground.png) -->
 
 ## Configuracion nginx
 
@@ -88,7 +94,7 @@ COPY ./default.conf /etc/nginx/conf.d/default.conf
 
 ```
 ---
-![bg left](./img/badground.png)
+<!-- ![bg left](./img/badground.png) -->
 
 ## Configuracion nginx
 
@@ -107,7 +113,7 @@ RUN apt-get update && apt-get install -y \
     
 ```
 ---
-![bg left](./img/badground.png)
+<!-- ![bg left](./img/badground.png) -->
 
 ## Configuracion nginx
 
@@ -123,20 +129,20 @@ RUN curl -sS https://getcomposer.org/installer | php && \
 ```
 ---
 ## Configuracion maria DB
-![bg left](./img/badground.png)
-
-
+instalamos mariadb
 ```bash
  apt install mariadb-server mariadb-client galera-4
 ```
 
 ---
 ## Configuracion maria DB
-![bg left](./img/badground.png)
 
 ```bash
  mariadb-secure-installation
 ```
+
+Creamos la base de datos creamos un usuario con usuario y contraseña y le damos todos los permisos
+
 ```sql
 CREATE DATABASE intermodular;
 CREATE USER 'laravel_user'@'%' IDENTIFIED BY 'laravel_password';
@@ -145,30 +151,30 @@ FLUSH PRIVILEGES;
 ```
 ---
 ## Archivo compose yml
-![bg left](./img/badground.png)
+
+
 
 ```yml
-services:
-  nginx:
-  build: ./nginx
-  container_name: nginx-container
-  ports:
+services: # todos los servicios que tendremos
+  nginx: # servico de nginx
+  build: ./nginx # cojeremos la configuracion de nuestra carpeta nginx
+  container_name: nginx-container # nombre que usaremos para ejecutar el contenedor
+  ports: # mapeamos los puertos el 80 de nuestra maquina virtual sera el 80 del docker
   - "80:80"
-  volumes:
+  volumes: # guardaremos la informacion de manera persistente aqui
   - ./www/html:/var/www/html
-  depends_on:
+  depends_on: # 
   - php
 
 ```
 ---
 ## Archivo compose yml
-![bg left](./img/test.png)
 
 ```yml
 php:
  build: ./php
  container_name: php-container
- expose:
+ expose: # abrimos el puerto 9000 para ver nuestra pagina web
  - "9000"
  volumes:
  - ./www/html:/var/www/html
@@ -177,12 +183,11 @@ php:
 ---
 
 ## Archivo compose yml
-![bg left](./img/badground.png)
 
 ```yml
-mariadb:
- image: mariadb:latest
- container_name: mariadb-container
+mariadb: # nombre del servicio
+ image: mariadb:latest # descargamos la imagen de maria db
+ container_name: mariadb-container 
  environment:
  MYSQL_ROOT_PASSWORD: root_password
  MYSQL_DATABASE: intermodular
@@ -191,7 +196,6 @@ mariadb:
 ```
 --- 
 ## Archivo compose yml
-![bg left](./img/badground.png)
 
 ```yml
 volumes:
@@ -207,7 +211,6 @@ volumes:
 ```
 ---
 ## Pagina de prueba php
-![bg left](./img/badground.png)
  Creamos el archivo www/html/index.php
 
  ```php
@@ -227,7 +230,6 @@ try {
  ---
 
  ## Construir y ejecutar los contenedores 
-![bg left](./img/badground.png)
 
 ```bash
 cd /home/cesar-debian/intermodular
@@ -236,25 +238,26 @@ docker-compose up --build -d
 ---
  ## Construir y ejecutar los contenedores 
 
-![bg left](./img/badground.png)
+<!-- ![bg left](./img/badground.png) -->
 ![contenedor-crear](./img/docker/create_container.png)
 ---
 
 ---
 ## Paso 7 Verificar la base de datos
-![bg left](./img/badground.png)
 
-Entramos al contenedor
+Entramos al contenedor para instalar composer
 ```bash
 docker exec -it php-container bash
 ```
 ---
-## Paso 7 Verificar la base de datos
-![bg left](./img/badground.png)
+## 7 Verificar la base de datos
 
 Entramos en mysql
 ```bash
 mysql -h mariadb -u laravel_user -p
+# - h nombre de servicio
+# - u usuario 
+# - p contraseña
 ```
 
 ---
@@ -321,6 +324,7 @@ DB_PASSWORD=laravel_password
 ```
 
 ---
+
 Ejecutamos la migracion 
 
 ```
@@ -331,6 +335,7 @@ php artisan migrate
 ---
 
 Apuntamos el Nginx al directorio del intermodular
+
 ```bash
 server {
     listen 80 default_server;
@@ -352,7 +357,7 @@ server {
 ```
 ---
 
-## 10. Configurar phpMyAdmin
+## 10 Configurar phpMyAdmin
 
 Añadimos el servicio de php myadmin
 
@@ -377,8 +382,10 @@ accedemos a (http://localhost:8081)
 docker-compose up --build -d
 ```
 ---
-![phpMyAdmin](/img/phpmyadmin/incio_sesion.png)
+Ponemos usuario y contraseña
+![phpMyAdmin](./img/phpmyadmin/incio_sesion.png)
 
 
 ---
-![phpMyAdmin](/img/phpmyadmin/phpMyAdmin.png)
+panel phpmyadmin
+![phpMyAdmin](./img/phpmyadmin/phpMyAdmin.png)
