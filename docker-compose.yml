@@ -1,0 +1,50 @@
+services:
+  nginx:
+    build: ./nginx
+    container_name: nginx-container
+    ports:
+      - "80:80"
+    volumes:
+      - ./www/html:/var/www/html
+    depends_on:
+      - php
+
+  php:
+    build: ./php
+    container_name: php-container
+    expose:
+      - "9000"
+    volumes:
+      - ./www/html:/var/www/html
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: intermodular-gestion-profesores
+      MYSQL_USER: laravel_user
+      MYSQL_PASSWORD: laravel_password
+
+    volumes:
+      # Volumen persistente para los datos de la base de datos
+      - mariadb_data:/var/lib/mysql
+      # Volumen para scripts de inicialización
+      - ./mariadb:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    
+  phpmyadmin:
+     image: phpmyadmin/phpmyadmin:latest
+     container_name: phpmyadmin-container
+     environment:
+       PMA_HOST: mariadb
+       MYSQL_ROOT_PASSWORD: root_password
+     ports:
+     - "8081:80"
+     depends_on:
+     - mariadb
+
+# Declaración de volúmenes persistentes
+volumes:
+  mariadb_data:
