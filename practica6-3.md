@@ -176,3 +176,70 @@ $TTL 86400
 20      IN PTR  despliegue.daw.es.
 
 ```
+---
+Archivo: bind/named.conf.options
+```bash
+options {
+    directory           "/var/cache/bind";
+    recursion           yes;
+    allow-query         { 10.1.0.0/24; 127.0.0.1; };
+    forwarders {
+        8.8.8.8;
+        8.8.4.4;
+    };
+    dnssec-validation   no;
+    listen-on           { any; };
+    listen-on-v6        { none; };
+};
+```
+---
+Archivo: bind/named.conf.local
+
+```bash
+
+zone "daw.es" {
+    type    master;
+    file    "/etc/bind/zones/db.daw.es";
+};
+
+zone "0.1.10.in-addr.arpa" {
+    type    master;
+    file    "/etc/bind/zones/db.10.1.0";
+};
+
+```
+---
+Archivo: nginx/default.conf
+```bash
+server {
+ listen 80;
+ server_name daw.es www.daw.es despliegue.daw.es www.despliegue.daw.es;
+ return 301 https://$host$request_uri;
+}
+server {
+ listen 443 ssl;
+ server_name daw.es www.daw.es despliegue.daw.es www.despliegue.daw.es;
+ ssl_certificate /etc/nginx/ssl/daw.crt;
+ ssl_certificate_key /etc/nginx/ssl/daw.key;
+ root /var/www/intermodular/public;
+ index index.php index.html;
+ location / {
+ try_files $uri $uri/ /index.php?$query_string;
+ }
+ location /phpmyadmin/ {
+ proxy_pass http://phpmyadmin-container:80/;
+ proxy_set_header Host $host;
+ proxy_set_header X-Real-IP $remote_addr;
+ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+ proxy_set_header X-Forwarded-Proto https;
+ }
+ location ~ \.php$ {
+ fastcgi_pass php-container:9000;
+ fastcgi_index index.php;
+ fastcgi_param SCRIPT_FILENAME /var/www/intermodular/public$fastcgi_script_name;
+ include fastcgi_params;
+ }
+}
+```
+
+
