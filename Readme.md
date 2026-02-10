@@ -233,7 +233,7 @@ try {
 
 ```bash
 cd /home/cesar-debian/intermodular
-docker-compose up --build -d
+docker compose up --build -d
 ```
 ---
  ## Construir y ejecutar los contenedores 
@@ -355,6 +355,9 @@ server {
     }
 }
 ```
+---
+![laravel inicio](./img/laravel/laravel.png)
+
 ---
 
 ## 10 Configurar phpMyAdmin
