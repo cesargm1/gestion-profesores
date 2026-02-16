@@ -7,13 +7,16 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./www/html:/var/www/html
+      - ./www/html/intermodular:/var/www/html/intermodular
       - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/default.conf:/ect/nginx/default.conf
     depends_on:
       - php
     networks:
       default:
         ipv4_address: 10.1.0.20
+    dns:
+      - 10.1.0.10  
 
   php:
     build: ./php
@@ -21,10 +24,12 @@ services:
     expose:
       - "9000"
     volumes:
-      - ./www/html:/var/www/html
+      - ./www/html/intermodular:/var/www/html/intermodular
     networks:
       default:
         ipv4_address: 10.1.0.30
+    dns:
+      - 10.1.0.10
 
   mariadb:
     image: mariadb:latest
@@ -45,15 +50,17 @@ services:
     networks:
       default:
         ipv4_address: 10.1.0.40
+    dns:
+      - 10.1.0.10 
   dns:
     image: internetsystemsconsortium/bind9:9.18
     container_name: dns-container
     ports:
-      - "53:53/udp"
-      - "53:53/tcp"
+      - "1053:53/udp"
+      - "1053:53/tcp"
     volumes:
       - ./bind:/etc/bind
-    restart: 'no'
+    restart: 'always'
     networks:
       default:
         ipv4_address: 10.1.0.10

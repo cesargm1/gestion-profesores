@@ -1,17 +1,13 @@
-$TTL 86400
-@       IN SOA  ns1.daw.es. root.daw.es. (
-                2024083001 ; Serial
-                3600       ; Refresh
-                1800       ; Retry
-                1209600    ; Expire
-                86400      ; Minimum TTL
-                )
-
-; Nameservers
-@       IN NS   ns1.daw.es.
-
-; Registros PTR (Reverse DNS)
-10      IN PTR  ns1.daw.es.
-20      IN PTR  www.daw.es.
-20      IN PTR  www.despliegue.daw.es.
-20      IN PTR  despliegue.daw.es.
+$TTL    86400
+@       IN      SOA     ns1.daw.es. root.daw.es. (
+                        2024083001 ; Serial
+                        3600       ; Refresh
+                        1800       ; Retry
+                        1209600    ; Expire
+                        86400 )    ; Minimum TTL
+;
+@       IN      NS      ns1.daw.es.
+10      IN      PTR     ns1.daw.es.
+20      IN      PTR     www.daw.es.
+20      IN      PTR     www.despliegue.daw.es.
+20      IN      PTR     despliegue.daw.es.

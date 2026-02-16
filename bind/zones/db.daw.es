@@ -7,11 +7,10 @@ $TTL 86400
                 86400      ; Minimum TTL
                 )
 
-; Nameservers
+;
 @       IN NS   ns1.daw.es.
-
-; Registros A
 ns1     IN A    10.1.0.10
 www     IN A    10.1.0.20
 despliegue IN A 10.1.0.20
 www.despliegue IN A 10.1.0.20
+www.despliegue.daw.es IN A 10.1.0.20
