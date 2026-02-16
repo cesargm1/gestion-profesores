@@ -9,7 +9,7 @@ services:
     volumes:
       - ./www/html/intermodular:/var/www/html/intermodular
       - ./nginx/ssl:/etc/nginx/ssl
-      - ./nginx/default.conf:/ect/nginx/default.conf
+      - ./nginx/default.conf:/etc/nginx/default.conf
     depends_on:
       - php
     networks:
