@@ -1,0 +1,9 @@
+<nav *ngIf="user()" class="navbar">
+  <div class="logo">Control Faltas</div>
+
+  <div class="links">
+    <a routerLink="/peremaria" *ngIf="!isAdmin()">Mi Horario</a>
+    <a routerLink="/admin" *ngIf="isAdmin()">Admin</a>
+    <button (click)="logout()">Salir</button>
+  </div>
+</nav>

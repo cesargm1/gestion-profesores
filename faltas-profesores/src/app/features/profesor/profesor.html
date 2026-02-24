@@ -1,0 +1,30 @@
+<div class="container">
+  <h2>Horario de Hoy</h2>
+
+  <div *ngFor="let h of horario()" class="card">
+    <p><strong>Aula:</strong> {{ h.aula }}</p>
+    <p>{{ h.horaInicio }} - {{ h.horaFin }}</p>
+  </div>
+
+  <h3>Faltar todo el día</h3>
+
+  <textarea
+    placeholder="Mensaje para alumnos"
+    [ngModel]="mensaje()"
+    (ngModelChange)="mensaje.set($event)">
+  </textarea>
+
+  <textarea
+    placeholder="Tareas pendientes"
+    [ngModel]="tareas()"
+    (ngModelChange)="tareas.set($event)">
+  </textarea>
+
+  <button (click)="faltarTodo()">Registrar falta</button>
+
+  <div class="recuento">
+    <h3>Recuento</h3>
+    <p>Días faltados: {{ recuento().dias }}</p>
+    <p>Horas faltadas: {{ recuento().horas }}</p>
+  </div>
+</div>

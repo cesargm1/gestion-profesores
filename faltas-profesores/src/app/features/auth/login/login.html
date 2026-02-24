@@ -1,0 +1,18 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    <h2>Control de Faltas</h2>
+
+    <input
+      type="text"
+      placeholder="Alias (Ej: INR)"
+      [ngModel]="alias()"
+      (ngModelChange)="alias.set($event)"
+    />
+
+    <button (click)="login()" [disabled]="loading()">
+      {{ loading() ? 'Entrando...' : 'Entrar' }}
+    </button>
+
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+  </div>
+</div>

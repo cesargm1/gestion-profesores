@@ -1,0 +1,21 @@
+.login-wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f4f6f9;
+}
+
+.login-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 25px rgba(0,0,0,.08);
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}

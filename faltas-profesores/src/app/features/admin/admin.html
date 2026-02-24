@@ -1,0 +1,24 @@
+<div class="container">
+  <h2>Panel Administración</h2>
+
+  <div class="card">
+    <h3>Nuevo Horario</h3>
+
+    <input [(ngModel)]="nuevo.profesorAlias" placeholder="Alias profesor">
+    <input [(ngModel)]="nuevo.aula" placeholder="Aula">
+    <input [(ngModel)]="nuevo.horaInicio" placeholder="Hora inicio">
+    <input [(ngModel)]="nuevo.horaFin" placeholder="Hora fin">
+    <input [(ngModel)]="nuevo.diaSemana" placeholder="Día semana">
+
+    <button (click)="crear()">Crear</button>
+  </div>
+
+  <div class="card">
+    <h3>Lista Horarios</h3>
+
+    <div *ngFor="let h of horarios()" class="horario-item">
+      {{ h.profesorAlias }} - {{ h.aula }} - {{ h.diaSemana }}
+      <button (click)="eliminar(h.id)">Eliminar</button>
+    </div>
+  </div>
+</div>

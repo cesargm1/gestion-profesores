@@ -1,0 +1,18 @@
+.navbar {
+  background: #1976d2;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  align-items: center;
+}
+
+.links {
+  display: flex;
+  gap: 1rem;
+}
+
+button {
+  background: white;
+  color: #1976d2;
+}
