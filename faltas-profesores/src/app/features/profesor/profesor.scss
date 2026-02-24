@@ -2,6 +2,34 @@
   padding: 2rem;
 }
 
+.tabla-horario {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-horario th,
+.tabla-horario td {
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tabla-horario tbody tr {
+  cursor: pointer;
+}
+
+.tabla-horario tbody tr:hover {
+  background: #f5f5f5;
+}
+
+.tabla-horario tbody tr.seleccionada {
+  background: #e3f2fd;
+}
+
+.tabla-horario tbody tr.sin-clase {
+  color: #9e9e9e;
+  cursor: default;
+}
+
 textarea {
   margin-bottom: 1rem;
 }

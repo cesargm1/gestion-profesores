@@ -1,28 +1,80 @@
 <div class="container">
-  <h2>Horario de Hoy</h2>
+  <h2>Horario de hoy</h2>
 
-  <div *ngFor="let h of horario()" class="card">
-    <p><strong>Aula:</strong> {{ h.aula }}</p>
-    <p>{{ h.horaInicio }} - {{ h.horaFin }}</p>
+  <div class="card">
+    <table class="tabla-horario">
+      <thead>
+        <tr>
+          <th>Hora inicio</th>
+          <th>Hora fin</th>
+          <th>Aula / estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let fila of filasHorario()"
+          (click)="fila.clase && seleccionarClase(fila.clase)"
+          [class.seleccionada]="claseSeleccionada() === fila.clase"
+          [class.sin-clase]="!fila.clase"
+        >
+          <td>{{ fila.slot.horaInicio }}</td>
+          <td>{{ fila.slot.horaFin }}</td>
+          <td>
+            <ng-container *ngIf="fila.clase; else sinClaseSlot">
+              Aula {{ fila.clase.aula }}
+            </ng-container>
+            <ng-template #sinClaseSlot>
+              No hay clase asignada para esta hora
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-  <h3>Faltar todo el día</h3>
+  <!-- Panel de falta por clase -->
+  <div class="card" *ngIf="claseSeleccionada() as clase">
+    <h3>Registrar falta en esta clase</h3>
+    <p>
+      <strong>{{ clase.horaInicio }} - {{ clase.horaFin }}</strong>
+      &nbsp;| Aula: <strong>{{ clase.aula }}</strong>
+    </p>
 
-  <textarea
-    placeholder="Mensaje para alumnos"
-    [ngModel]="mensaje()"
-    (ngModelChange)="mensaje.set($event)">
-  </textarea>
+    <textarea
+      placeholder="Mensaje para alumnos"
+      [ngModel]="mensajeHora()"
+      (ngModelChange)="mensajeHora.set($event)">
+    </textarea>
 
-  <textarea
-    placeholder="Tareas pendientes"
-    [ngModel]="tareas()"
-    (ngModelChange)="tareas.set($event)">
-  </textarea>
+    <textarea
+      placeholder="Tareas pendientes"
+      [ngModel]="tareasHora()"
+      (ngModelChange)="tareasHora.set($event)">
+    </textarea>
 
-  <button (click)="faltarTodo()">Registrar falta</button>
+    <button (click)="faltarClase()">Registrar falta en esta clase</button>
+  </div>
 
-  <div class="recuento">
+  <!-- Panel de falta de todo el día -->
+  <div class="card">
+    <h3>Faltar todo el día</h3>
+
+    <textarea
+      placeholder="Mensaje para alumnos"
+      [ngModel]="mensajeDia()"
+      (ngModelChange)="mensajeDia.set($event)">
+    </textarea>
+
+    <textarea
+      placeholder="Tareas pendientes"
+      [ngModel]="tareasDia()"
+      (ngModelChange)="tareasDia.set($event)">
+    </textarea>
+
+    <button (click)="faltarTodo()">Registrar falta de todo el día</button>
+  </div>
+
+  <div class="recuento card">
     <h3>Recuento</h3>
     <p>Días faltados: {{ recuento().dias }}</p>
     <p>Horas faltadas: {{ recuento().horas }}</p>
