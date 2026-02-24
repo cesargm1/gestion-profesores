@@ -22,4 +22,9 @@ class Falta extends Model
     {
         return $this->belongsTo(Horario::class);
     }
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class);
+    }
 }
