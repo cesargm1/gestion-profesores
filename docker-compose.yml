@@ -23,6 +23,7 @@ services:
     container_name: php-container
     expose:
       - "9000"
+    user: "$UID"
     volumes:
       - ./www/html/intermodular:/var/www/html/intermodular
     networks:
