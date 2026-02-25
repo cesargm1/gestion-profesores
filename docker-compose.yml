@@ -7,16 +7,30 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./www/html/intermodular:/var/www/html/intermodular
       - ./nginx/ssl:/etc/nginx/ssl
       - ./nginx/default.conf:/etc/nginx/default.conf
     depends_on:
       - php
+      - node
     networks:
       default:
         ipv4_address: 10.1.0.20
     dns:
       - 10.1.0.10  
+
+  node:
+    build: ./node
+    container_name: node-container
+    expose:
+      - "4200"
+    user: "$UID"
+    volumes:
+      - ./faltas-procesores:/app
+    networks:
+      default:
+        ipv4_address: 10.1.0.35
+    dns:
+      - 10.1.0.10s
 
   php:
     build: ./php
@@ -25,7 +39,7 @@ services:
       - "9000"
     user: "$UID"
     volumes:
-      - ./www/html/intermodular:/var/www/html/intermodular
+      - ./api:/var/www/html/intermodular
     networks:
       default:
         ipv4_address: 10.1.0.30
