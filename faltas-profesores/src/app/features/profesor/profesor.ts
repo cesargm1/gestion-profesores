@@ -18,7 +18,6 @@ export class ProfesorComponent {
   horario = signal<Horario[]>([]);
   recuento = signal<{ dias: number; horas: number }>({ dias: 0, horas: 0 });
 
-  // Tramos horarios fijos del día (ajusta si tu centro usa otros)
   slots = [
     { horaInicio: '15:20', horaFin: '16:15' },
     { horaInicio: '16:15', horaFin: '17:10' },
@@ -29,7 +28,6 @@ export class ProfesorComponent {
     { horaInicio: '21:10', horaFin: '22:05' }
   ];
 
-  // Combina slots con el horario real del backend
   filasHorario = computed(() =>
     this.slots.map(slot => ({
       slot,
