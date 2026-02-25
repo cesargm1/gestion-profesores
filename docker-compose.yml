@@ -1,5 +1,19 @@
 ---
 services:
+  dns:
+    image: internetsystemsconsortium/bind9:9.18
+    container_name: dns-container
+    ports:
+      - "1053:53/udp"
+      - "1053:53/tcp"
+    volumes:
+      - ./bind:/etc/bind
+    restart: 'always'
+    networks:
+      default:
+        ipv4_address: 10.1.0.10
+  
+
   nginx:
     build: ./nginx
     container_name: nginx-container
@@ -10,6 +24,7 @@ services:
       - ./nginx/ssl:/etc/nginx/ssl
       - ./nginx/default.conf:/etc/nginx/default.conf
     depends_on:
+      - dns
       - php
       - node
     networks:
@@ -19,27 +34,32 @@ services:
       - 10.1.0.10  
 
   node:
-    build: ./node
+    build:
+      context: .
+      dockerfile: node/Dockerfile
     container_name: node-container
     expose:
       - "4200"
-    user: "$UID"
     volumes:
-      - ./faltas-procesores:/app
+      - ./faltas-profesores:/app
+      - ./faltas-profesores/node_modules:/app/node_modules
+    depends_on:
+      - dns
     networks:
       default:
         ipv4_address: 10.1.0.35
     dns:
-      - 10.1.0.10s
+      - 10.1.0.10
 
   php:
     build: ./php
     container_name: php-container
     expose:
       - "9000"
-    user: "$UID"
     volumes:
       - ./api:/var/www/html/intermodular
+    depends_on:
+      - dns
     networks:
       default:
         ipv4_address: 10.1.0.30
@@ -51,7 +71,7 @@ services:
     container_name: mariadb-container
     environment:
       MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: intermodular-gestion-profesores
+      MYSQL_DATABASE: intermodular_gestion_profesores
       MYSQL_USER: laravel_user
       MYSQL_PASSWORD: laravel_password
 
@@ -67,18 +87,6 @@ services:
         ipv4_address: 10.1.0.40
     dns:
       - 10.1.0.10 
-  dns:
-    image: internetsystemsconsortium/bind9:9.18
-    container_name: dns-container
-    ports:
-      - "1053:53/udp"
-      - "1053:53/tcp"
-    volumes:
-      - ./bind:/etc/bind
-    restart: 'always'
-    networks:
-      default:
-        ipv4_address: 10.1.0.10
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: phpmyadmin-container
